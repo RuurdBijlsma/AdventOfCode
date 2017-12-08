@@ -8,26 +8,26 @@ part2 = (i, s = {}) => Math.max(...i.split('\n').map(l => s[l.split(' ')[0]] = +
 
 //Part 1 in for loop
 storage = {};
-for(let line of input.split('\n')){
-  [variable, operation, value, _, conditionVariable, operator, conditionValue] = line.split(' ');
-  currentValue=storage[line.split(' ')[0]] === undefined ? 0 : storage[line.split(' ')[0]];
-  operation=`${operation === 'inc' ? '+' : '-'} ${value}`;
-  condition = `${storage[conditionVariable] || 0} ${line.split(' ').slice(-2).join(' ')}`;
-  newValue = +eval(`${currentValue}` + (eval(condition) ? operation : ''));
-  storage[variable] = newValue;
+for (let line of input.split('\n')) {
+    [variable, operation, value, _, conditionVariable, operator, conditionValue] = line.split(' ');
+    currentValue = storage[variable] === undefined ? 0 : storage[variable];
+    operation = `${operation === 'inc' ? '+' : '-'} ${value}`;
+    condition = `${storage[conditionVariable] || 0} ${line.split(' ').slice(-2).join(' ')}`;
+    newValue = +eval(`${currentValue}` + (eval(condition) ? operation : ''));
+    storage[variable] = newValue;
 }
 Math.max(...Object.values(storage))
 
 //Part 2 in for loop
 storage = {};
 values = []
-for(let line of input.split('\n')){
-  [variable, operation, value, _, conditionVariable, operator, conditionValue] = line.split(' ');
-  currentValue=storage[line.split(' ')[0]] === undefined ? 0 : storage[line.split(' ')[0]];
-  operation=`${operation === 'inc' ? '+' : '-'} ${value}`;
-  condition = `${storage[conditionVariable] || 0} ${line.split(' ').slice(-2).join(' ')}`;
-  newValue = +eval(`${currentValue}` + (eval(condition) ? operation : ''));
-  values.push(newValue);
-  storage[variable] = newValue;
+for (let line of input.split('\n')) {
+    [variable, operation, value, _, conditionVariable, operator, conditionValue] = line.split(' ');
+    currentValue = storage[variable] === undefined ? 0 : storage[variable];
+    operation = `${operation === 'inc' ? '+' : '-'} ${value}`;
+    condition = `${storage[conditionVariable] || 0} ${line.split(' ').slice(-2).join(' ')}`;
+    newValue = +eval(`${currentValue}` + (eval(condition) ? operation : ''));
+    values.push(newValue);
+    storage[variable] = newValue;
 }
 Math.max(values)
