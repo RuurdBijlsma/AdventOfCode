@@ -3,22 +3,22 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 conntectedTo = (map, program, result = []) => {
-	result.push(program);
+    result.push(program);
 
-	for(let p of map[program]){
-		if(!result.includes(p))
-			conntectedTo(map, p, result);
+    for (let p of map[program]) {
+        if (!result.includes(p))
+            conntectedTo(map, p, result);
     }
-	
-	return result;
+
+    return result;
 }
 
 map = {}
 
-for(let line of input.split('\n')){
+for (let line of input.split('\n')) {
 
-	[program, connections] = line.split(' <-> ');
-	map[program] = connections.split(', ').map(n=>+n);
+    [program, connections] = line.split(' <-> ');
+    map[program] = connections.split(', ').map(n => +n);
 
 }
 
@@ -29,34 +29,34 @@ conntectedTo(map, 0).length;
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 conntectedTo = (map, program, result = []) => {
-	result.push(program);
+    result.push(program);
 
-	for(let p of map[program]){
-		if(!result.includes(p))
-			conntectedTo(map, p, result);
+    for (let p of map[program]) {
+        if (!result.includes(p))
+            conntectedTo(map, p, result);
     }
-	
-	return result;
+
+    return result;
 }
 
 map = {}
 
-for(let line of input.split('\n')){
+for (let line of input.split('\n')) {
 
-	[program, connections] = line.split(' <-> ');
-	map[program] = connections.split(', ').map(n=>+n);
+    [program, connections] = line.split(' <-> ');
+    map[program] = connections.split(', ').map(n => +n);
 
 }
 
 
 groupNum = 0;
-do{
-	group = conntectedTo(map, Object.keys(map)[0]);
+do {
+    group = conntectedTo(map, Object.keys(map)[0]);
 
-    for(let program of group){
+    for (let program of group) {
         delete map[program];
     }
-	groupNum++;
-}while(Object.keys(map).length !== 0);
+    groupNum++;
+} while (Object.keys(map).length !== 0);
 
 groupNum;
