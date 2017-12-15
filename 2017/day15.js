@@ -1,77 +1,41 @@
+function* Generate(startValue, factor, modValue = 1) {
+    while (true) {
+        do {
+            startValue *= factor;
+            startValue %= 2147483647;
+        } while (startValue % modValue !== 0);
+        yield startValue & 0xFFFF;
+    }
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////// PART 1 //////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function* A() {
-    let startValue = 516;
-    let factor = 16807;
+part1 = () => {
+    a = Generate(516, 16807);
+    b = Generate(190, 48271);
 
-    while (true) {
-        startValue *= factor;
-        startValue %= 2147483647;
-        yield startValue & 0xFFFF;
-    }
+    sum = 0;
+    for (let i = 0; i < 40000000; i++)
+        if (a.next().value === b.next().value)
+            sum++;
+
+    return sum;
 }
-
-function* B() {
-    let startValue = 190;
-    let factor = 48271;
-
-    while (true) {
-        startValue *= factor;
-        startValue %= 2147483647;
-        yield startValue & 0xFFFF;
-    }
-}
-
-a = A();
-b = B();
-
-sum = 0;
-for (let i = 0; i < 40000000; i++)
-    if (a.next().value === b.next().value)
-        sum++;
-
-sum
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////// PART 2 //////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function* A() {
-    let startValue = 516;
-    let factor = 16807;
-    let modValue = 4;
+part2 = () => {
+    a = Generate(516, 16807, 4);
+    b = Generate(190, 48271, 8);
 
-    while (true) {
-        do {
-            startValue *= factor;
-            startValue %= 2147483647;
-        } while (startValue % modValue !== 0);
-        yield startValue & 0xFFFF;
-    }
+    sum = 0;
+    for (let i = 0; i < 5000000; i++)
+        if (a.next().value === b.next().value)
+            sum++;
+
+    return sum;
 }
-
-function* B() {
-    let startValue = 190;
-    let factor = 48271;
-    let modValue = 8;
-
-    while (true) {
-        do {
-            startValue *= factor;
-            startValue %= 2147483647;
-        } while (startValue % modValue !== 0);
-        yield startValue & 0xFFFF;
-    }
-}
-
-a = A();
-b = B();
-
-sum = 0;
-for (let i = 0; i < 5000000; i++)
-    if (a.next().value === b.next().value)
-        sum++;
-
-sum
