@@ -1,0 +1,77 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////// PART 1 //////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function* A() {
+    let startValue = 516;
+    let factor = 16807;
+
+    while (true) {
+        startValue *= factor;
+        startValue %= 2147483647;
+        yield startValue & 0xFFFF;
+    }
+}
+
+function* B() {
+    let startValue = 190;
+    let factor = 48271;
+
+    while (true) {
+        startValue *= factor;
+        startValue %= 2147483647;
+        yield startValue & 0xFFFF;
+    }
+}
+
+a = A();
+b = B();
+
+sum = 0;
+for (let i = 0; i < 40000000; i++)
+    if (a.next().value === b.next().value)
+        sum++;
+
+sum
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////// PART 2 //////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+function* A() {
+    let startValue = 516;
+    let factor = 16807;
+    let modValue = 4;
+
+    while (true) {
+        do {
+            startValue *= factor;
+            startValue %= 2147483647;
+        } while (startValue % modValue !== 0);
+        yield startValue & 0xFFFF;
+    }
+}
+
+function* B() {
+    let startValue = 190;
+    let factor = 48271;
+    let modValue = 8;
+
+    while (true) {
+        do {
+            startValue *= factor;
+            startValue %= 2147483647;
+        } while (startValue % modValue !== 0);
+        yield startValue & 0xFFFF;
+    }
+}
+
+a = A();
+b = B();
+
+sum = 0;
+for (let i = 0; i < 5000000; i++)
+    if (a.next().value === b.next().value)
+        sum++;
+
+sum
