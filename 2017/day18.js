@@ -46,7 +46,7 @@ jgz a -19`;
 
 Program = class {
     constructor(input) {
-		this.lastSound = 0;
+        this.lastSound = 0;
 
         this.commands = input.split('\n').map(c => {
             let [name, register, value = null] = c.split(' ');
@@ -54,11 +54,6 @@ Program = class {
         });
 
         this.registers = {};
-
-        this.commands
-            .filter(({ register }) => isNaN(register))
-            .filter(({ register }) => register !== 'p')
-            .forEach(({ register }) => this.registers[register] = 0);
     }
 
     get(value) {
@@ -76,16 +71,19 @@ Program = class {
         for (let i = 0; i < this.commands.length; i++) {
             let command = this.commands[i];
 
-            if (command.name === 'jgz')
-                i += this.get(command.register) > 0 ? this.get(command.value) - 1 : 0;
-            else if (command.name === 'rcv') {
-				return this.lastSound;
-            } else if (command.name === 'snd') {
-				this.lastSound = this.get(command.register);
-            } else 
-                actions[command.name](this.registers, command.register, command.value);
+            switch (command.name) {
+                case 'jgz':
+                    i += this.get(command.register) > 0 ? this.get(command.value) - 1 : 0;
+                    break;
+                case 'rcv':
+                    return this.lastSound;
+                case 'snd':
+                    this.lastSound = this.get(command.register);
+                    break;
+                default:
+                    actions[command.name](this.registers, command.register, command.value);
+            }
         }
-        return false;
     }
 }
 
@@ -108,11 +106,6 @@ Program = class {
         });
 
         this.registers = { 'p': this.id };
-
-        this.commands
-            .filter(({ register }) => isNaN(register))
-            .filter(({ register }) => register !== 'p')
-            .forEach(({ register }) => this.registers[register] = 0);
     }
 
     get(value) {
@@ -130,28 +123,31 @@ Program = class {
         for (let i = startIndex; i < this.commands.length; i++) {
             let command = this.commands[i];
 
-            if (command.name === 'jgz')
-                i += this.get(command.register) > 0 ? this.get(command.value) - 1 : 0;
-            else if (command.name === 'rcv') {
-                if (this.queue.length === 0) {
-                    if (friendProgram.queue.length !== 0) {
-                        this.waitIndex = i;
-                        friendProgram.run(this, friendProgram.waitIndex);
-                    }
+
+            switch (command.name) {
+                case 'jgz':
+                    i += this.get(command.register) > 0 ? this.get(command.value) - 1 : 0;
                     break;
-                }
+                case 'rcv':
+                    if (this.queue.length === 0) {
+                        if (friendProgram.queue.length !== 0) {
+                            this.waitIndex = i;
+                            friendProgram.run(this, friendProgram.waitIndex);
+                        }
+                        return;
+                    }
 
-                let [value] = this.queue.splice(0, 1);
-                actions.set(this.registers, command.register, value);
-            } else if (command.name === 'snd') {
-                this.sendAmount++;
-                friendProgram.queue.push(this.get(command.register));
-            } else 
-                actions[command.name](this.registers, command.register, command.value);
-            
-
+                    let [value] = this.queue.splice(0, 1);
+                    actions.set(this.registers, command.register, value);
+                    break;
+                case 'snd':
+                    this.sendAmount++;
+                    friendProgram.queue.push(this.get(command.register));
+                    break;
+                default:
+                    actions[command.name](this.registers, command.register, command.value);
+            }
         }
-        return false;
     }
 }
 
