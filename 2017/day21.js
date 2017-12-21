@@ -1,122 +1,11 @@
 document.addEventListener('DOMContentLoaded', init);
 
-input = `../.. => #.#/.#./...
-#./.. => .../..#/..#
-##/.. => .#./##./###
-.#/#. => ..#/#../##.
-##/#. => ##./..#/#.#
-##/## => ###/###/.##
-.../.../... => ...#/#.##/.##./#..#
-#../.../... => .###/#.##/##.#/##.#
-.#./.../... => #.../.###/..#./#.##
-##./.../... => .#.#/.###/##../#.##
-#.#/.../... => .##./..../##.#/#...
-###/.../... => ..##/.#.#/###./#..#
-.#./#../... => .#.#/##.#/.#.#/.##.
-##./#../... => ###./.###/#.../...#
-..#/#../... => #.##/##../.#../.##.
-#.#/#../... => ..##/..../..##/...#
-.##/#../... => ####/#..#/.#../....
-###/#../... => ##../..#./##../....
-.../.#./... => .###/...#/#.../#...
-#../.#./... => .#../.#.#/..##/#.#.
-.#./.#./... => ##.#/####/.#.#/##..
-##./.#./... => ..../.###/#.#./..##
-#.#/.#./... => ..#./..#./..../....
-###/.#./... => ###./..../..#./....
-.#./##./... => ..../.##./##.#/....
-##./##./... => ..#./.#../..##/#...
-..#/##./... => #.##/.##./..#./.##.
-#.#/##./... => .###/#.../##.#/..#.
-.##/##./... => ###./##../..#./..##
-###/##./... => ..#./.##./.###/#..#
-.../#.#/... => ###./#.../####/#.#.
-#../#.#/... => .##./.#../#.##/.#..
-.#./#.#/... => .#../##../..##/.#.#
-##./#.#/... => ###./#.#./##.#/##..
-#.#/#.#/... => #.../.##./#.##/#.#.
-###/#.#/... => ###./..##/#.##/###.
-.../###/... => ##../...#/#.#./#.#.
-#../###/... => .#../...#/##.#/####
-.#./###/... => #.#./..##/#.#./.##.
-##./###/... => ..##/..##/.###/#...
-#.#/###/... => ####/##../..../#..#
-###/###/... => ...#/#.##/#.##/#.#.
-..#/.../#.. => .#.#/..##/#.##/#..#
-#.#/.../#.. => ...#/..#./##../#..#
-.##/.../#.. => ####/##../..../##..
-###/.../#.. => ..#./..#./##.#/#..#
-.##/#../#.. => .#../####/.###/#..#
-###/#../#.. => ####/.#.#/...#/..##
-..#/.#./#.. => #.#./.##./####/....
-#.#/.#./#.. => ##../###./.#../##..
-.##/.#./#.. => ###./.#../...#/....
-###/.#./#.. => .#../.###/##../##.#
-.##/##./#.. => .#../#..#/.###/#...
-###/##./#.. => ..../.##./##../...#
-#../..#/#.. => ##.#/...#/.###/##.#
-.#./..#/#.. => ##../##../..../#.#.
-##./..#/#.. => ..##/.#../#.#./.#.#
-#.#/..#/#.. => ..../..##/...#/...#
-.##/..#/#.. => #.../..##/...#/####
-###/..#/#.. => #.../..#./##.#/.#.#
-#../#.#/#.. => ..##/#.../#..#/..#.
-.#./#.#/#.. => #..#/#.../.##./#.##
-##./#.#/#.. => ##.#/.##./##.#/...#
-..#/#.#/#.. => ####/.#.#/.##./#.#.
-#.#/#.#/#.. => #..#/.##./.##./.###
-.##/#.#/#.. => ...#/...#/..../.##.
-###/#.#/#.. => .#../###./..../.###
-#../.##/#.. => ##.#/##../#.#./...#
-.#./.##/#.. => ###./.#.#/#.##/####
-##./.##/#.. => #.##/..#./.#../#..#
-#.#/.##/#.. => #.#./..##/..##/.#.#
-.##/.##/#.. => .#../.###/.###/#.##
-###/.##/#.. => #.../##../#.#./.#..
-#../###/#.. => #.#./###./.##./..#.
-.#./###/#.. => #.../#.../.##./.#..
-##./###/#.. => ..#./.###/..##/#...
-..#/###/#.. => #.##/.#../###./.###
-#.#/###/#.. => .#.#/#..#/###./##..
-.##/###/#.. => #.#./#.##/..##/.#..
-###/###/#.. => ##../#.../..#./#..#
-.#./#.#/.#. => #..#/####/#.#./#..#
-##./#.#/.#. => ..##/.#../##.#/#..#
-#.#/#.#/.#. => ####/#.#./#..#/#.#.
-###/#.#/.#. => #.../##.#/..../#...
-.#./###/.#. => ..##/.##./####/.###
-##./###/.#. => .##./..#./#.##/#..#
-#.#/###/.#. => ##.#/##../####/...#
-###/###/.#. => ..##/####/...#/.#..
-#.#/..#/##. => #.##/.#.#/#.#./#.##
-###/..#/##. => ...#/##.#/#..#/..#.
-.##/#.#/##. => .#.#/..#./..../###.
-###/#.#/##. => ###./####/##.#/#.##
-#.#/.##/##. => ##.#/#.##/.##./##..
-###/.##/##. => .#.#/#.#./###./####
-.##/###/##. => .#../####/.#../....
-###/###/##. => .#../..../##.#/.##.
-#.#/.../#.# => #.../#.../..##/..##
-###/.../#.# => ...#/..#./##.#/####
-###/#../#.# => .###/..##/.#../....
-#.#/.#./#.# => ###./####/.#../#..#
-###/.#./#.# => #.../#.##/..../###.
-###/##./#.# => .###/####/#..#/.###
-#.#/#.#/#.# => .#.#/...#/.#.#/#.##
-###/#.#/#.# => ..../..#./..#./####
-#.#/###/#.# => ..##/...#/.#.#/.##.
-###/###/#.# => .###/.##./..##/####
-###/#.#/### => #.#./.#../.#.#/#.#.
-###/###/### => #..#/##../#.#./####`;
 iterations = 5;
+sizePerGrid = 25;
 
-// input = `../.# => ##./#../...
-// .#./..#/### => #..#/..../..../#..#`;
-// iterations = 2;
+async function init() {
+    input = await (await fetch('input.txt')).text();
 
-sizePerGrid = 10;
-
-function init() {
     canvas = document.createElement('canvas');
     document.body.appendChild(canvas);
     ctx = canvas.getContext('2d');
@@ -124,76 +13,46 @@ function init() {
     pattern = `.#.
 ..#
 ###`.split('\n')
-        .map(r => r
-            .split('')
-            .map(i => i === '#')
-        );
+        .map(r => r.split('')
+            .map(i => i === '#'));
 
     rules = parseRules(input);
-
-    // for (let i = 0; i < iterations; i++) {
-    // 	iterate();
-    // }
 
     draw(pattern, canvas, ctx);
     let iv = setInterval(() => {
         iterate();
         console.log(countEm(pattern));
 
-        if (--iterations <= 0) {
-            // alert(countEm(pattern));
+        if (--iterations <= 0)
             clearInterval(iv);
-        }
-    }, 200);
+    }, 100);
 }
 
 function countEm(pattern) {
-    let count = 0;
-    let size = pattern.length;
-    for (let y = 0; y < size; y++) {
-        for (let x = 0; x < size; x++) {
-            if (pattern[y][x]) {
-                count++;
-                ctx.fillStyle = 'blue';
-                ctx.fillRect(sizePerGrid * x, sizePerGrid * y, sizePerGrid / 1.1, sizePerGrid / 1.1);
-            }
-        }
-    }
-    return count;
+    return pattern.map(p => p
+        .reduce((a, b) => a + b)
+    ).reduce((a, b) => a + b);
 }
 
 function iterate() {
-    let size = pattern.length;
-    for (let divisor = 2; divisor <= size; divisor++)
-        if (size % divisor === 0) {
-            let res = concatPattern(pattern, divisor, size);
-            if (!res)
-                continue;
-            pattern = res;
+    for (let divisor = 2; divisor <= pattern.length; divisor++)
+        if (pattern.length % divisor === 0) {
+            pattern = concatPattern(pattern, divisor);
             break;
         }
 
     draw(pattern, canvas, ctx);
 }
 
-function concatPattern(pattern, divisor, size) {
+function concatPattern(pattern, divisor) {
     let subPatterns = [];
 
-    for (let y = 0; y < size; y += divisor) {
+    for (let y = 0; y < pattern.length; y += divisor) {
         let gridRow = [];
-        for (let x = 0; x < size; x += divisor) {
-            let inputSubPattern = pattern
+        for (let x = 0; x < pattern.length; x += divisor)
+            gridRow.push(rules[pattern
                 .slice(y, y + divisor)
-                .map(row => row.slice(x, x + divisor));
-
-            let key = inputSubPattern.toString();
-            if (rules.hasOwnProperty(key))
-                gridRow.push(rules[key]);
-            else {
-                console.warn('no output found for input', inputSubPattern);
-                return false;
-            }
-        }
+                .map(row => row.slice(x, x + divisor))]);
         subPatterns.push(gridRow);
     }
 
@@ -201,18 +60,18 @@ function concatPattern(pattern, divisor, size) {
 }
 
 function draw(patternGrid, canvas, ctx) {
-    let size = patternGrid.length;
-    canvas.width = canvas.height = sizePerGrid * size;
-    for (let y = 0; y < size; y++) {
-        for (let x = 0; x < size; x++) {
+    canvas.width = canvas.height = sizePerGrid * patternGrid.length;
+    for (let y = 0; y < patternGrid.length; y++)
+        for (let x = 0; x < patternGrid.length; x++) {
             if (!patternGrid[y][x]) continue;
 
             let xPos = x * sizePerGrid;
             let yPos = y * sizePerGrid;
             ctx.fillStyle = 'white';
             ctx.fillRect(xPos, yPos, sizePerGrid, sizePerGrid);
+            ctx.fillStyle = 'maroon';
+            ctx.fillRect(xPos, yPos, sizePerGrid * 0.9, sizePerGrid * 0.9);
         }
-    }
 }
 
 function concat2d(arrays) {
@@ -226,12 +85,13 @@ function concat2d(arrays) {
 
             let sub2dArray = arrays[y][x];
             for (let y1 = 0; y1 < sub2dArray.length; y1++) {
-                let realX = subSize * y + y1;
+                let realY = subSize * y + y1;
                 for (let x1 = 0; x1 < sub2dArray[y1].length; x1++) {
-                    let realY = subSize * x + x1;
+                    let realX = subSize * x + x1;
                     result[realY][realX] = sub2dArray[y1][x1];
                 }
             }
+
         }
     }
 
@@ -239,50 +99,24 @@ function concat2d(arrays) {
 }
 
 function parseRules(inputString) {
-    let rules = inputString
-        .split('\n')
-        .map(r => r
-            .split(' => ')
-            .map(p => p
-                .split('/')
-                .map(r => r
-                    .split('')
-                    .map(i => i === '#')
-                )
-            )
-        );
-
+    let rules = inputString.split('\n')
+        .map(r => r.split(' => ')
+            .map(p => p.split('/')
+                .map(r => r.split('')
+                    .map(i => i === '#'))));
     let result = {};
     for (let rule of rules) {
         let input = rule[0];
         let output = rule[1];
 
         for (let i = 0; i < 4; i++) {
-            input = sym(clone(input));
+            input = sym(input);
             result[input] = output;
-            input = flip(clone(input));
+            input.reverse()
             result[input] = output;
         }
     }
     return result;
-}
-
-function rotate(matrix) {
-    var n = matrix.length;
-    for (var i = 0; i < n / 2; i++) {
-        for (var j = 0; j < Math.floor(n / 2); j++) {
-            var temp = matrix[i][j];
-            matrix[i][j] = matrix[n - 1 - j][i];
-            matrix[n - 1 - j][i] = matrix[n - 1 - i][n - 1 - j];
-            matrix[n - 1 - i][n - 1 - j] = matrix[j][n - 1 - i];
-            matrix[j][n - 1 - i] = temp;
-        }
-    }
-    return matrix;
-}
-
-function clone(obj) {
-    return JSON.parse(JSON.stringify(obj));
 }
 
 function sym(pattern) {
@@ -290,14 +124,9 @@ function sym(pattern) {
     let size = pattern.length;
     for (let y = 0; y < size; y++) {
         result.push([])
-        for (let x = 0; x < size; x++) {
+        for (let x = 0; x < size; x++)
             result[y][x] = pattern[x][y];
-        }
     }
 
     return result;
-}
-
-function flip(pattern) {
-    return pattern.reverse();
 }
