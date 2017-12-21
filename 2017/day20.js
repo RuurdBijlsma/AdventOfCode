@@ -67,6 +67,7 @@ particles.sort((a, b) => a.p.manhattan() - b.p.manhattan())[0];
 removeCollisions = particles => {
     let remove = [];
     for (let i = 0; i < particles.length; i++) {
+        if(remove.includes(i)) continue;
         let p1 = particles[i].p;
         for (let j = i + 1; j < particles.length; j++) {
             let p2 = particles[j].p;
