@@ -2,10 +2,10 @@
 
 version       = "0.1.0"
 author        = "Ruurd Bijlsma"
-description   = "Day 1"
+description   = "Advent of code"
 license       = "MIT"
 srcDir        = "src"
-bin           = @["day1"]
+bin           = @["aoc"]
 
 
 # Dependencies
