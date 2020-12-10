@@ -1,4 +1,4 @@
-import nimbench, strutils, sequtils, sugar, algorithm
+import nimbench, strutils, sequtils, sugar, algorithm, typetraits
 
 func getDifferences(outputs: auto): auto=
   var differences = @[outputs[0]]
@@ -18,16 +18,14 @@ func countArrangments(outputs: auto, startJoltage: int, endJoltage: int): int=
   for valid in outputs.filter(output => startJoltage < output and startJoltage >= output - 3):
     result += countArrangments(outputs, valid, endJoltage)
 
-func getSubSlices(outputs: auto): auto=
-  var subSlices = newSeq[seq[int]]()
+func getSubSlices(outputs: auto): seq[seq[int]]=
   var slice = @[outputs[0]]
   for (prev, current) in zip(outputs[0..<outputs.len - 1], outputs[1..<outputs.len]):
     if current - prev == 3:
-      subSlices.add slice;
+      result.add slice;
       slice = newSeq[int]()
     slice.add current
-  subSlices.add slice
-  return subSlices
+  result.add slice
 
 func distinctArrangements(outputs: auto): auto=
   let subSlices = getSubSlices(outputs)
@@ -40,7 +38,8 @@ func distinctArrangements(outputs: auto): auto=
 proc part2(): void = 
   const input = staticRead("input")
   const outputs = input.splitLines.map(parseInt).sorted
-  echo distinctArrangements outputs
+  const result = distinctArrangements outputs
+  echo result
 
 
 bench(part1, m):
