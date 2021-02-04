@@ -38,8 +38,7 @@ func distinctArrangements(outputs: auto): auto=
 proc part2(): void = 
   const input = staticRead("input")
   const outputs = input.splitLines.map(parseInt).sorted
-  const result = distinctArrangements outputs
-  echo result
+  echo distinctArrangements outputs
 
 
 bench(part1, m):
