@@ -52,7 +52,6 @@ func part2(): int =
       let findex = line.find(name)
       let lindex = line.rfind(name)
       if findex == -1: continue
-      # echo fmt"found {digit} at findex {findex} lindex {lindex}"
       if firstIndex == -1 or findex < firstIndex:
         firstIndex = findex
         firstDigit = digit
