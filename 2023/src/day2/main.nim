@@ -30,7 +30,7 @@ func part1*(): int =
   
   return validGames.foldl(a + b, 0)
 
-func part2*(): int =
+func part2(): int =
   const input = staticRead("input.txt")
 
   result = 0
