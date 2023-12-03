@@ -2,7 +2,7 @@ import strutils
 import strformat
 import tables
 
-func part1(): int =
+func part1*(): int =
   const input = staticRead("input.txt")
   const lines = input.splitLines()
   result = 0;
@@ -17,7 +17,7 @@ func part1(): int =
 
     result += (firstDigit & lastDigit).parseInt()
 
-func part2(): int =
+func part2*(): int =
   const input = staticRead("input.txt")
   const lines = input.splitLines()
   const digits = {
@@ -60,9 +60,3 @@ func part2(): int =
         lastDigit = digit
     
     result += (firstDigit & lastDigit).parseInt()
-
-proc run*() =
-  echo "PART 1 ="
-  echo part1()
-  echo "PART 2 ="
-  echo part2()
