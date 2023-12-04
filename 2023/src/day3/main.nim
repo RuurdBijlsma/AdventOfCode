@@ -96,3 +96,4 @@ func part2*(): int =
     if touchers.len == 2:
       let ratio = touchers.foldl(a * b, 1)
       result += ratio
+      
