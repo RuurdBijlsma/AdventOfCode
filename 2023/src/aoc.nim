@@ -1,10 +1,10 @@
 import nimbench
 import std/strformat
 
-from day6/main import part1, part2
+from day7/main import part1, part2
 
 when isMainModule:
-  const benchmark = true
+  const benchmark = false
   if benchmark:
     bench(part1, m):
       for _ in 0..m:
