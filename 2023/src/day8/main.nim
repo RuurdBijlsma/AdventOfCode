@@ -15,6 +15,11 @@ func newBranch(label: string): Branch =
   new(result)
   result.label = label
 
+iterator cycle[T](s: openArray[T]): T =
+  while true:
+    for v in s:
+      yield v
+
 func makeTree(input: static string): TableRef[string, Branch] =
   const lines = input.splitLines()
   var network = newTable[string, Branch]()
@@ -41,16 +46,15 @@ func part1*(): int =
   var position = makeTree(input)["AAA"]
   result = 0
 
-  while true: 
-    for direction in directions:
-      result += 1
-      if direction == 'L':
-        position = position.left
-      if direction == 'R':
-        position = position.right
+  for direction in directions.cycle:
+    result += 1
+    if direction == 'L':
+      position = position.left
+    if direction == 'R':
+      position = position.right
 
-      if position.label == "ZZZ":
-        return result
+    if position.label == "ZZZ":
+      return result
 
 func part2*(): int =
   const input = staticRead("input")
@@ -64,18 +68,16 @@ func part2*(): int =
   result = 0
 
   for i in 0 ..< positions.len:
-    block outer:
-      while true: 
-        for direction in directions:
-          loopLengths[i] += 1
+    for direction in directions.cycle:
+      loopLengths[i] += 1
 
-          if direction == 'L':
-            positions[i] = positions[i].left
-          if direction == 'R':
-            positions[i] = positions[i].right
+      if direction == 'L':
+        positions[i] = positions[i].left
+      if direction == 'R':
+        positions[i] = positions[i].right
 
-          if positions[i].label[2] == 'Z':
-            break outer;
+      if positions[i].label[2] == 'Z':
+        break
           
   return lcm(loopLengths)
 
