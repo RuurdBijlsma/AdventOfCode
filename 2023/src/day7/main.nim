@@ -19,13 +19,11 @@ func handStrength(hand: seq[string]): int =
     return 7
   if maxOfAKind == 4:
     return 6
-  if valueSet.len == 2:
-    # full house
+  if valueSet.len == 2: # full house
     return 5
   if maxOfAKind == 3:
     return 4
-  if valueSet.len == 3:
-    # 2 pair
+  if valueSet.len == 3: # 2 pair
     return 3
   return maxOfAKind
 
