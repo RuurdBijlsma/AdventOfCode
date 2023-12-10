@@ -48,10 +48,7 @@ func part1*(): int =
 
   for direction in directions.cycle:
     result += 1
-    if direction == 'L':
-      position = position.left
-    if direction == 'R':
-      position = position.right
+    position = if direction == 'L': position.left else: position.right
 
     if position.label == "ZZZ":
       return result
@@ -62,7 +59,7 @@ func part2*(): int =
 
   let network = makeTree(input)
   var positions = network.keys.toSeq
-    .filter(k => k[2] == 'A')
+    .filter(k => k.endsWith("A"))
     .map(k => network[k])
   var loopLengths = newSeq[int](positions.len)
   result = 0
@@ -71,12 +68,9 @@ func part2*(): int =
     for direction in directions.cycle:
       loopLengths[i] += 1
 
-      if direction == 'L':
-        positions[i] = positions[i].left
-      if direction == 'R':
-        positions[i] = positions[i].right
+      positions[i] = if direction == 'L': positions[i].left else: positions[i].right
 
-      if positions[i].label[2] == 'Z':
+      if positions[i].label.endsWith("Z"):
         break
           
   return lcm(loopLengths)
