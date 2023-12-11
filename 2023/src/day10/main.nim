@@ -39,9 +39,7 @@ const pipeToDir = {
 }.toTable
 
 func fits(pipeA, pipeB: char, dir: Dir): bool =
-  if pipeB in dirToPipe[dir]:
-    return true
-  return false
+  pipeB in dirToPipe[dir]
 
 func `+`(pos: (int, int), dir: Dir): (int, int) =
   if dir == Dir.up:
