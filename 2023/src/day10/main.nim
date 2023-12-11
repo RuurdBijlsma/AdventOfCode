@@ -86,7 +86,7 @@ func makeLoop(input: static string): (seq[string], int, int, HashSet[(int, int)]
       if dir == origin:
         continue
       let (x2, y2) = (x, y) + dir
-      if (x2, y2) in visited or not (x2, y2).inGrid:
+      if (x2, y2) in visited:
         continue
       visited.incl((x2, y2))
       frontier.insert((x2, y2, reverseDir[dir]), 0)
