@@ -52,13 +52,13 @@ proc countFits(springInfo: string, slidingWindows: seq[string], winI = 0): int =
         fits = false
         break
     if fits:
-      let newSpringInfo = springInfo.substr(i + window.len)
-      let key = (newSpringInfo, slidingWindows[winI ..< slidingWindows.len])
+      let subSpringInfo = springInfo.substr(i + window.len)
+      let key = (subSpringInfo, slidingWindows[winI ..< slidingWindows.len])
       var count: int
       if memo.hasKey(key):
         count = memo[key]
       else:
-        count = countFits(newSpringInfo, slidingWindows, winI + 1)
+        count = countFits(subSpringInfo, slidingWindows, winI + 1)
         memo[key] = count
       result += count
     else:
@@ -70,6 +70,7 @@ proc part2*(): int =
   let repeatCount = 5
   const input = staticRead("input")
   const lines = input.splitLines()
+  var i = 0
   for line in lines:
     let parts = line.split(" ")
     let springInfo = sequtils.repeat(parts[0], repeatCount).join("?")
@@ -80,5 +81,8 @@ proc part2*(): int =
     
     let slidingWindows = contiguous.mapIt("." & "#".repeat(it) & ".")
     let fitCount = countFits(springInfo, slidingWindows)
+
+    echo &"LINE {i}"
+    i += 1
 
     result += fitCount
