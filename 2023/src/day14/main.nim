@@ -68,7 +68,7 @@ proc part2*(): int =
   var grid = input.splitLines()
 
   const cycle = [Dir.north, Dir.west, Dir.south, Dir.east]
-  const cycles = 1000000000
+  const cycles = 1_000_000_000
   var grids = newSeq[seq[string]]()
   var repeatCycle = (0, 0)
 
