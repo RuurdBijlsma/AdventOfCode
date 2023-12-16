@@ -8,10 +8,20 @@ import std/algorithm
 import std/sets
 
 type Dir = enum
-  up = 0,
-  right = 1,
-  down = 2,
-  left = 3,
+  up, right, down, left
+
+func `[]`(b: seq[string], pos: (int, int)): char =
+  b[pos[1]][pos[0]]
+
+func `+`(pos: (int, int), dir: Dir): (int, int) =
+  if dir == Dir.up:
+    return (pos[0], pos[1] - 1)
+  if dir == Dir.right:
+    return (pos[0] + 1, pos[1])
+  if dir == Dir.down:
+    return (pos[0], pos[1] + 1)
+  if dir == Dir.left:
+    return (pos[0] - 1, pos[1])
 
 const rotate = {
   Dir.up: {
@@ -32,19 +42,6 @@ const rotate = {
   }.toTable,
 }.toTable
 
-proc `[]`(b: seq[string], pos: (int, int)): char =
-  b[pos[1]][pos[0]]
-
-func `+`(pos: (int, int), dir: Dir): (int, int) =
-  if dir == Dir.up:
-    return (pos[0], pos[1] - 1)
-  if dir == Dir.right:
-    return (pos[0] + 1, pos[1])
-  if dir == Dir.down:
-    return (pos[0], pos[1] + 1)
-  if dir == Dir.left:
-    return (pos[0] - 1, pos[1])
-
 iterator itemDirections(dir: Dir, item: char): Dir =
   if item == '.':
     yield dir
@@ -63,20 +60,12 @@ iterator itemDirections(dir: Dir, item: char): Dir =
     elif dir == Dir.up or dir == Dir.down:
       yield dir
 
-proc countEnergized(grid: static seq[string], entry: ((int, int), Dir)): int =
+func countEnergized(grid: static seq[string], entry: ((int, int), Dir)): int =
   template inGrid(pos: (int, int)): bool =
     pos[0] >= 0 and pos[1] >= 0 and pos[0] < grid[0].len and pos[1] < grid.len
   
-  var beams = newTable[(int, int), HashSet[Dir]]()
-  template printVisited() =
-    for y in 0 ..< grid.len:
-      for x in 0 ..< grid[y].len:
-        if (x, y) in beams:
-          stdout.write('#')
-        else:
-          stdout.write(grid[y][x])
-      stdout.write("\n")
-
+  var beams = initHashSet[((int, int), Dir)]()
+  var energized = initHashSet[(int, int)]()
   var queue = @[entry]
   while true:
     if queue.len == 0:
@@ -85,16 +74,15 @@ proc countEnergized(grid: static seq[string], entry: ((int, int), Dir)): int =
     let newPos = pos + dir
     if not newPos.inGrid():
       continue
-    let posVisited = beams.hasKey(newPos)
-    if not posVisited:
-      beams[newPos] = initHashSet[Dir]()
+    energized.incl(newPos)
     for newDir in dir.itemDirections(grid[newPos]):
-      if posVisited and newDir in beams[newPos]:
+      let beam = (newPos, newDir)
+      if beam in beams:
         continue
-      beams[newPos].incl(newDir)
+      beams.incl(beam)
       queue.insert((newPos, newDir), 0)
 
-  return beams.len
+  return energized.len
 
 proc part1*(): int =
   const input = staticRead("input")
