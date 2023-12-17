@@ -12,3 +12,4 @@ bin           = @["aoc"]
 
 requires "nim >= 2.0.0"
 requires "nimbench >= 0.2.1"
+requires "binaryheap >= 0.1.0"
