@@ -6,45 +6,81 @@ import std/math
 import std/sugar
 import std/algorithm
 import std/sets
-import astar
+import std/terminal
+import grid
 
-type
-    Grid = seq[seq[int]]
-        ## A matrix of nodes. Each cell is the cost of moving to that node
+proc getPath(origins: TableRef[Point, Origin], start, target: Point, limit = int.high): seq[Point] =
+  result = @[target]
+  var point = target
+  while result.len < limit:
+    if not origins.hasKey(point) or point == start: 
+      break
+    point = origins[point].point
+    result.add point
+  result.reverse()
 
-    Point = (tuple[x, y: int])
-        ## A point within that grid
+proc printGridCosts(grid: Grid, origins: TableRef[Point, Origin], highlight: Point) =
+  for y in 0 ..< grid.len:
+    for x in 0 ..< grid[0].len:
+      let pos = (x, y)
+      if origins.hasKey(pos):
+        let cost = origins[pos].cost
+        if pos == highlight:
+          setForegroundColor(fgCyan)
+          setBackgroundColor(bgRed)
+          stdout.write(align($cost, 4))
+          setForegroundColor(fgDefault)
+          setBackgroundColor(bgDefault)
+        else:
+          stdout.write(align($cost, 4))
+      else:
+        stdout.write(" ".repeat(4))
+    stdout.write("\n")
 
-func `[]`(grid: Grid, point: Point): int =
-  grid[point.y][point.x]
+proc calcPath(grid: Grid, start: Point, target: Point): seq[Point] =
+  var front: seq[Origin] = @[(start, 0)]
+  var origins = newTable[Point, Origin]()
+  origins[start] = ((-1, -1), 0)
 
-template yieldIfExists( grid: Grid, point: Point ) =
-    ## Checks if a point exists within a grid, then calls yield it if it does
-    let exists =
-        point.y >= 0 and point.y < grid.len and
-        point.x >= 0 and point.x < grid[point.y].len
-    if exists:
-        yield point
+  while true:
+    let current = front.pop()
 
-iterator neighbors*( grid: Grid, point: Point ): Point =
-    ## An iterator that yields the neighbors of a given point
-    yieldIfExists( grid, (x: point.x - 1, y: point.y) )
-    yieldIfExists( grid, (x: point.x + 1, y: point.y) )
-    yieldIfExists( grid, (x: point.x, y: point.y - 1) )
-    yieldIfExists( grid, (x: point.x, y: point.y + 1) )
+    # let last3 = getPath(origins, start, current.point, 3)
+    # echo &"recent path: {last3}"
+    # var illegalY = -1;
+    # var illegalX = -1
+    # if last3.len == 3:
+    #   let diff = difference(last3[2], last3[0])
+    #   if diff.x == 2:
+    #     illegalY = last3[0].y
+    #   if diff.y == 2:
+    #     illegalX = last3[0].x
+    # echo &"Illegals: {(illegalX, illegalY)}"
 
-proc cost*(grid: Grid, a, b: Point): float =
-    ## Returns the cost of moving from point `a` to point `b`
-    float(1 + grid[b.y][b.x])
+    if current.point == target:
+      echo "       DONE          "
+      grid.printGridCosts(origins, (-1, -1))
+      echo ""
 
-proc heuristic*( grid: Grid, node, goal: Point ): int =
-    ## Returns the priority of inspecting the given node
-    0
-    # manhattan[Point, int](node, goal)
+      return getPath(origins, start, target)
+
+    for next in grid.neighbors(current.point):
+      # if next.x == illegalX or next.y == illegalY:
+      #   continue
+
+      let cost = current.cost + grid[next]
+      let alreadyVisited = next in origins
+      if not alreadyVisited or cost < origins[next].cost:
+        origins[next] = (current.point, cost)
+        echo &"------------visiting {next}-------------"
+        grid.printGridCosts(origins, next)
+        echo &"----------------- done ------------------"
+        front.insert((next, cost), 0)
+
 
 proc part1*(): int =
   echo "=".repeat(100)
-  const input = staticRead("testInput")
+  const input = staticRead("testInput3")
   let grid: Grid = input.splitLines()
     .map(l => l.toSeq.map(p => parseInt($p)))
   let start = (x: 0, y: 0)
@@ -52,11 +88,12 @@ proc part1*(): int =
 
   var visited = initHashSet[Point]()
 
-  for point in path[Grid, Point, float](grid, start, target):
-    echo &"done {point} = {grid[point]}"
+  let path = calcPath(grid, start, target)
+  for point in path:
+    echo &"visit {point}"
     visited.incl(point)
-    if point == (0, 0): continue
-    result += grid[point]
+    if point != start:
+      result += grid[point]
 
   echo "Grid="
   echo grid.mapIt(it.join(" ")).join("\n")
