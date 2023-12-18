@@ -6,8 +6,37 @@ import std/math
 import std/sugar
 import std/algorithm
 import std/sets
-import std/terminal
 import grid
+
+proc printGridCosts(grid: Grid, origins: TableRef[Point, Origin]) =
+  for y in 0 ..< grid.len:
+    for x in 0 ..< grid[0].len:
+      let pos = (x, y)
+      if origins.hasKey(pos):
+        let cost = origins[pos].cost
+        stdout.write(align($cost, 4))
+      else:
+        stdout.write(" ".repeat(4))
+    stdout.write("\n")
+
+iterator `..`(a, b: Point): Point =
+  let isHorizontal = a.x != b.x
+  if isHorizontal:
+    for x in min(a.x, b.x)..max(a.x, b.x):
+      yield (x, a.y)
+  else:
+    for y in min(a.y, b.y)..max(a.y, b.y):
+      yield (a.x, y)
+
+iterator `>..`(a, b: Point): Point =
+  for p in a .. b:
+    if p == a:
+      continue
+    yield p
+
+proc cost(grid: Grid, a, b: Point): int =
+  for p in a >.. b:
+    result += grid[p]
 
 proc getPath(origins: TableRef[Point, Origin], start, target: Point, limit = int.high): seq[Point] =
   result = @[target]
@@ -18,69 +47,32 @@ proc getPath(origins: TableRef[Point, Origin], start, target: Point, limit = int
     point = origins[point].point
     result.add point
   result.reverse()
-
-proc printGridCosts(grid: Grid, origins: TableRef[Point, Origin], highlight: Point) =
-  for y in 0 ..< grid.len:
-    for x in 0 ..< grid[0].len:
-      let pos = (x, y)
-      if origins.hasKey(pos):
-        let cost = origins[pos].cost
-        if pos == highlight:
-          setForegroundColor(fgCyan)
-          setBackgroundColor(bgRed)
-          stdout.write(align($cost, 4))
-          setForegroundColor(fgDefault)
-          setBackgroundColor(bgDefault)
-        else:
-          stdout.write(align($cost, 4))
-      else:
-        stdout.write(" ".repeat(4))
-    stdout.write("\n")
-
+    
 proc calcPath(grid: Grid, start: Point, target: Point): seq[Point] =
-  var front: seq[Origin] = @[(start, 0)]
+  var front: seq[Origin] = @[(start, Dir.none, 0)]
   var origins = newTable[Point, Origin]()
-  origins[start] = ((-1, -1), 0)
+  origins[start] = ((-1, -1), Dir.none, 0)
 
   while true:
     let current = front.pop()
 
-    # let last3 = getPath(origins, start, current.point, 3)
-    # echo &"recent path: {last3}"
-    # var illegalY = -1;
-    # var illegalX = -1
-    # if last3.len == 3:
-    #   let diff = difference(last3[2], last3[0])
-    #   if diff.x == 2:
-    #     illegalY = last3[0].y
-    #   if diff.y == 2:
-    #     illegalX = last3[0].x
-    # echo &"Illegals: {(illegalX, illegalY)}"
-
     if current.point == target:
-      echo "       DONE          "
-      grid.printGridCosts(origins, (-1, -1))
-      echo ""
-
+      printGridCosts(grid, origins)
       return getPath(origins, start, target)
 
-    for next in grid.neighbors(current.point):
-      # if next.x == illegalX or next.y == illegalY:
-      #   continue
-
-      let cost = current.cost + grid[next]
+    for (next, dir) in grid.neighbors(current.point, current.dir):
+      let cost = current.cost + grid.cost(current.point, next)
       let alreadyVisited = next in origins
       if not alreadyVisited or cost < origins[next].cost:
-        origins[next] = (current.point, cost)
-        echo &"------------visiting {next}-------------"
-        grid.printGridCosts(origins, next)
-        echo &"----------------- done ------------------"
-        front.insert((next, cost), 0)
-
+        origins[next] = (current.point, dir, cost)
+        
+        # printGridCosts(grid, origins)
+        # echo "=".repeat(100)
+        front.insert((next, dir, cost), 0)
 
 proc part1*(): int =
   echo "=".repeat(100)
-  const input = staticRead("testInput3")
+  const input = staticRead("testInput")
   let grid: Grid = input.splitLines()
     .map(l => l.toSeq.map(p => parseInt($p)))
   let start = (x: 0, y: 0)
@@ -89,11 +81,15 @@ proc part1*(): int =
   var visited = initHashSet[Point]()
 
   let path = calcPath(grid, start, target)
+  var prevPoint = start
   for point in path:
     echo &"visit {point}"
-    visited.incl(point)
-    if point != start:
-      result += grid[point]
+    if point == start: continue
+    for p in prevPoint .. point:
+      if p in visited: continue
+      result += grid[p]
+      visited.incl(p)
+    prevPoint = point
 
   echo "Grid="
   echo grid.mapIt(it.join(" ")).join("\n")
