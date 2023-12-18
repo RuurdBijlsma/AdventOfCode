@@ -1,3 +1,5 @@
+import std/[tables]
+
 const maxSteps = 3
 
 type Dir* = enum
@@ -14,6 +16,13 @@ type
 
 func `[]`*(grid: Grid, point: Point): int =
   grid[point.y][point.x]
+
+func reverse*(dir: Dir): Dir =
+  if dir == Dir.vertical:
+    return Dir.horizontal
+  if dir == Dir.horizontal: 
+    return Dir.vertical
+  return Dir.none
 
 template validYield( grid: Grid, point: Point, dir: Dir ) =
   ## Checks if a point exists within a grid, then calls yield it if it does

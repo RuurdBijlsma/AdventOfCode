@@ -8,12 +8,13 @@ import std/algorithm
 import std/sets
 import grid
 
-proc printGridCosts(grid: Grid, origins: TableRef[Point, Origin]) =
+proc printGridCosts(grid: Grid, origins: TableRef[Point, TableRef[Dir, Origin]], dir: Dir) =
+  echo dir
   for y in 0 ..< grid.len:
     for x in 0 ..< grid[0].len:
       let pos = (x, y)
-      if origins.hasKey(pos):
-        let cost = origins[pos].cost
+      if origins.hasKey(pos) and origins[pos].hasKey(dir):
+        let cost = origins[pos][dir].cost
         stdout.write(align($cost, 4))
       else:
         stdout.write(" ".repeat(4))
@@ -38,33 +39,50 @@ proc cost(grid: Grid, a, b: Point): int =
   for p in a >.. b:
     result += grid[p]
 
-proc getPath(origins: TableRef[Point, Origin], start, target: Point, limit = int.high): seq[Point] =
-  result = @[target]
+proc getPath(origins: TableRef[Point, TableRef[Dir, Origin]], start, target: Point): seq[Point] =
+  let origin = origins[target]
+
+  let horCost = origin[Dir.horizontal].cost
+  let verCost = origin[Dir.vertical].cost
+  var dir = Dir.vertical
+  if horCost < verCost:
+    dir = Dir.horizontal
+
   var point = target
-  while result.len < limit:
-    if not origins.hasKey(point) or point == start: 
+  result = @[target]
+  while true:
+    if not origins.hasKey(point) or not origins[point].hasKey(dir) or point == start: 
       break
-    point = origins[point].point
+    echo point
+    point = origins[point][dir].point
+    dir = origins[point][dir].dir.reverse()
     result.add point
   result.reverse()
     
 proc calcPath(grid: Grid, start: Point, target: Point): seq[Point] =
   var front: seq[Origin] = @[(start, Dir.none, 0)]
-  var origins = newTable[Point, Origin]()
-  origins[start] = ((-1, -1), Dir.none, 0)
+  var origins = {
+    start: {
+      Dir.none: (point: (-1, -1), dir: Dir.none, cost: 0)
+    }.newTable
+  }.newTable
 
   while true:
     let current = front.pop()
 
     if current.point == target:
-      printGridCosts(grid, origins)
+      echo "Found target"
+      printGridCosts(grid, origins, current.dir)
       return getPath(origins, start, target)
 
     for (next, dir) in grid.neighbors(current.point, current.dir):
       let cost = current.cost + grid.cost(current.point, next)
-      let alreadyVisited = next in origins
-      if not alreadyVisited or cost < origins[next].cost:
-        origins[next] = (current.point, dir, cost)
+      let alreadyVisited = origins.hasKey(next) and origins[next].hasKey(dir)
+      if not origins.hasKey(next):
+        origins[next] = newTable[Dir, Origin]()
+
+      if not alreadyVisited or cost < origins[next][dir].cost:
+        origins[next][dir] = (current.point, dir, cost)
         
         # printGridCosts(grid, origins)
         # echo "=".repeat(100)
