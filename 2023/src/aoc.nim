@@ -1,7 +1,7 @@
 import nimbench
 import std/strformat
 
-from day17/main import part1, part2
+from day18/main import part1, part2
 
 when isMainModule:
   const benchmark = false
