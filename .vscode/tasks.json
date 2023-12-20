@@ -13,7 +13,8 @@
                 "--d:release",
                 "--threads:on",
                 "-d:danger",
-                "--gc:orc"
+                "--gc:orc",
+                "-d:nimCallDepthLimit=32767"
             ]
         },
         {
