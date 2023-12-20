@@ -1,12 +1,10 @@
 import std/strutils
-import std/strformat
 import std/tables
 import std/sequtils
-import std/math
 import std/sugar
-import std/algorithm
 
 type Xmas = TableRef[string, int]
+type XmasRanges = Table[string, HSlice[int, int]]
 type XmasCond = (xmas: Xmas) -> bool
 
 proc part1*(): int =
@@ -25,8 +23,6 @@ proc part1*(): int =
   var flows = newTable[string, seq[(tuple[condition: XmasCond, destination: string])]]()
   for (name, procs) in workflows:
     var flow = newSeq[(tuple[condition: XmasCond, destination: string])]()
-    # echo name
-    # echo procs
     
     for procedure in procs:
       var dest: string
@@ -39,25 +35,20 @@ proc part1*(): int =
           let g = procedure[0].split("<")
           proc isSatisfied(num: int, key: string): XmasCond =
             proc(xmas: Xmas): bool =
-              # echo &"{xmas[key]} < {num}"
               xmas[key] < num
           condition = isSatisfied(g[1].parseInt, g[0])
         elif procedure[0].contains(">"):
           let g = procedure[0].split(">")
           proc isSatisfied(num: int, key: string): XmasCond =
             proc(xmas: Xmas): bool =
-              # echo &"{xmas[key]} > {num}"
               xmas[key] > num
           condition = isSatisfied(g[1].parseInt, g[0])
         dest = procedure[1]
 
-      let test: Xmas = {"x":787,"m":2655,"a":1222,"s":2876}.newTable
-      # echo &"if {condition(test)} -> {dest}"
       flow.add((condition: condition, destination: dest))
     flows[name] = flow
   
   proc isAccepted(part: Xmas, flowName: string): bool =
-    # echo &"{flowName}"
     if flowName == "A": return true
     if flowName == "R": return false
     let flow = flows[flowName]
@@ -67,13 +58,52 @@ proc part1*(): int =
 
   for part in parts:
     let accept = isAccepted(part, "in")
-    # echo &"part {part} is accepted: {accept}"
     if accept:
       for num in part.values:
         result += num
 
 proc part2*(): int =
   const input = staticRead("input")
-  const lines = input.splitLines()
-  
-  return 0
+  const workflows = input.split("\n\n")[0].splitLines()
+    .map(line => line.split("{"))
+    .map(p => (name: p[0], procs: p[1].substr(0, p[1].len - 2).split(",").map(i => i.split(":"))))
+
+  var flows = newTable[string, seq[(tuple[lt: int, gt: int, key: string, destination: string])]]()
+  for (name, procs) in workflows:
+    var flow = newSeq[(tuple[lt: int, gt: int, key: string, destination: string])]()
+    
+    for procedure in procs:
+      var component = (lt: -1, gt: -1, key: "", destination: procedure[procedure.len - 1])
+      if procedure.len == 2:
+        if procedure[0].contains("<"):
+          let g = procedure[0].split("<")
+          component.key = g[0]
+          component.lt = g[1].parseInt
+        if procedure[0].contains(">"):
+          let g = procedure[0].split(">")
+          component.key = g[0]
+          component.gt = g[1].parseInt
+      flow.add(component)
+    flows[name] = flow
+
+  let xmas: XmasRanges = {"x": 1 .. 4000, "m": 1 .. 4000, "a": 1 .. 4000, "s": 1 .. 4000}.toTable
+  var queue = @[(xmas, "in")]
+  while queue.len > 0:
+    var (xmas, workflow) = queue.pop()
+    if workflow == "R": continue
+    if workflow == "A":
+      var combinations = 1
+      for slice in xmas.values:
+        combinations *= slice.b - (slice.a - 1)
+      result += combinations
+      continue
+    for (lt, gt, key, destination) in flows[workflow]:
+      var clamped = xmas
+      if key != "":
+        if lt != -1:
+          clamped[key].b = min(clamped[key].b, lt - 1)
+          xmas[key].a = max(xmas[key].a, lt)
+        if gt != -1:
+          clamped[key].a = max(clamped[key].a, gt + 1)
+          xmas[key].b = min(xmas[key].b, gt)
+      queue.insert((clamped, destination), 0)
