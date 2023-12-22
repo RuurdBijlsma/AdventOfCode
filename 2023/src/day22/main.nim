@@ -11,11 +11,6 @@ type Point = (tuple[x,y,z: int])
 type Grid = seq[seq[int]]
 type Brick = (tuple[start, finish: Point])
 
-func `$`(g: Grid): string =
-  result &= "_".repeat(58) & "\n"
-  result &= g.map(r => r.map(i => (if i == -1: "." else: $i).center(1)).join(" ")).join("\n") & "\n"
-  result &= "—".repeat(58)
-
 func `[]`(s: seq[Grid], p: Point): int =
   s[p.z][p.y][p.x]
 func `[]=`(s: var seq[Grid], p: Point, v: int) =
